@@ -4,7 +4,7 @@ import axios from 'axios';
 const App = () => {
   const [inputJson, setInputJson] = useState('');
   const [response, setResponse] = useState(null);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
   const options = [
     { label: "Numbers", value: "numbers" },
@@ -36,20 +36,28 @@ const App = () => {
     }
   };
 
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
+  const handleMultiSelectChange = (event) => {
+    const selectedValues = Array.from(event.target.selectedOptions, option => option.value);
+    setSelectedOptions(selectedValues);
   };
 
   const renderFilteredResponse = () => {
-    if (!response || !selectedOption) return null;
+    if (!response || selectedOptions.length === 0) return null;
 
-    if (selectedOption === "numbers") {
-      return <p>Numbers: {JSON.stringify(response.numbers)}</p>;
-    } else if (selectedOption === "alphabets") {
-      return <p>Alphabets: {JSON.stringify(response.alphabets)}</p>;
-    } else if (selectedOption === "highest_lowercase_alphabet") {
-      return <p>Highest Lowercase Alphabet: {JSON.stringify(response.highest_lowercase_alphabet)}</p>;
-    }
+    return (
+      <div>
+        <h3>Filtered Response:</h3>
+        {selectedOptions.includes("numbers") && (
+          <p>Numbers: {JSON.stringify(response.numbers)}</p>
+        )}
+        {selectedOptions.includes("alphabets") && (
+          <p>Alphabets: {JSON.stringify(response.alphabets)}</p>
+        )}
+        {selectedOptions.includes("highest_lowercase_alphabet") && (
+          <p>Highest Lowercase Alphabet: {JSON.stringify(response.highest_lowercase_alphabet)}</p>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -77,8 +85,12 @@ const App = () => {
           <pre style={styles.pre}>{JSON.stringify(response, null, 2)}</pre>
 
           <h3>Filter the response:</h3>
-          <select value={selectedOption} onChange={handleSelectChange} style={styles.select}>
-            <option value="">Select an option</option>
+          <select
+            multiple={true}
+            value={selectedOptions}
+            onChange={handleMultiSelectChange}
+            style={styles.select}
+          >
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
