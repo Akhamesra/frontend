@@ -24,7 +24,7 @@ const App = () => {
     event.preventDefault();
     try {
       const jsonData = JSON.parse(inputJson);
-      const result = await axios.post('http://localhost:5000/bfhl', jsonData, {
+      const result = await axios.post('https://backend-bfhl-orpin.vercel.app.vercel.app/api/bfhl', jsonData, {
         headers: {
           'Content-Type': 'application/json',
         },
