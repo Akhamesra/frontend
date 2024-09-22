@@ -26,9 +26,9 @@ const App = () => {
       const jsonData = JSON.parse(inputJson);
       const result = await axios.post('https://backend-bfhl-orpin.vercel.app/api/bfhl', jsonData, {
         headers: {
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
-      });
+    });
       setResponse(result.data);
     } catch (error) {
       alert('Invalid JSON input or API error');
