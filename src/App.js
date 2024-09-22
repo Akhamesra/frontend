@@ -28,7 +28,7 @@ const App = () => {
         headers: {
             'Content-Type': 'application/json',
         },
-    });
+      });
       setResponse(result.data);
     } catch (error) {
       alert('Invalid JSON input or API error');
@@ -65,10 +65,10 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Bajaj Finserv Health Dev Challenge</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+    <div style={styles.container}>
+      <h1 style={styles.heading}>Bajaj Finserv Health Dev Challenge</h1>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <label style={styles.label}>
           Enter JSON Input:
           <textarea
             value={inputJson}
@@ -76,24 +76,26 @@ const App = () => {
             rows="5"
             cols="50"
             placeholder='{ "data": ["A", "B", "C", "z"] }'
+            style={styles.textarea}
           />
         </label>
         <br />
-        <button type="submit">Submit</button>
+        <button type="submit" style={styles.button}>Submit</button>
       </form>
 
       {response && (
-        <div>
+        <div style={styles.responseContainer}>
           <h3>Raw Response:</h3>
-          <pre>{JSON.stringify(response, null, 2)}</pre>
+          <pre style={styles.pre}>{JSON.stringify(response, null, 2)}</pre>
 
           <h3>Filter the response:</h3>
           {options.map((option) => (
-            <label key={option.value}>
+            <label key={option.value} style={styles.checkboxLabel}>
               <input
                 type="checkbox"
                 value={option.value}
                 onChange={handleMultiSelectChange}
+                style={styles.checkbox}
               />
               {option.label}
             </label>
@@ -103,6 +105,68 @@ const App = () => {
       )}
     </div>
   );
+};
+
+const styles = {
+  container: {
+    width: '80%',
+    margin: '0 auto',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
+  },
+  heading: {
+    textAlign: 'center',
+    color: '#333',
+  },
+  form: {
+    marginBottom: '20px',
+  },
+  label: {
+    fontWeight: 'bold',
+    marginBottom: '10px',
+    display: 'block',
+  },
+  textarea: {
+    width: '100%',
+    padding: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+    fontSize: '16px',
+  },
+  button: {
+    padding: '10px 20px',
+    backgroundColor: '#007BFF',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  buttonHover: {
+    backgroundColor: '#0056b3',
+  },
+  responseContainer: {
+    marginTop: '20px',
+    padding: '20px',
+    backgroundColor: '#fff',
+    borderRadius: '4px',
+    border: '1px solid #ddd',
+  },
+  pre: {
+    backgroundColor: '#f4f4f4',
+    padding: '10px',
+    borderRadius: '4px',
+    overflowX: 'auto',
+  },
+  checkboxLabel: {
+    display: 'block',
+    margin: '10px 0',
+  },
+  checkbox: {
+    marginRight: '8px',
+  },
 };
 
 export default App;
