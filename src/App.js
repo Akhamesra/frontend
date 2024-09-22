@@ -4,7 +4,7 @@ import axios from 'axios';
 const App = () => {
   const [inputJson, setInputJson] = useState('');
   const [response, setResponse] = useState(null);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('');
 
   const options = [
     { label: "Numbers", value: "numbers" },
@@ -26,7 +26,7 @@ const App = () => {
       const jsonData = JSON.parse(inputJson);
       const result = await axios.post('https://backend-bfhl-orpin.vercel.app/api/bfhl', jsonData, {
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
       });
       setResponse(result.data);
@@ -36,32 +36,20 @@ const App = () => {
     }
   };
 
-  const handleMultiSelectChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      setSelectedOptions([...selectedOptions, value]);
-    } else {
-      setSelectedOptions(selectedOptions.filter(option => option !== value));
-    }
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
   };
 
   const renderFilteredResponse = () => {
-    if (!response) return null;
-    
-    return (
-      <div>
-        <h3>Filtered Response:</h3>
-        {selectedOptions.includes("numbers") && (
-          <p>Numbers: {JSON.stringify(response.numbers)}</p>
-        )}
-        {selectedOptions.includes("alphabets") && (
-          <p>Alphabets: {JSON.stringify(response.alphabets)}</p>
-        )}
-        {selectedOptions.includes("highest_lowercase_alphabet") && (
-          <p>Highest Lowercase Alphabet: {JSON.stringify(response.highest_lowercase_alphabet)}</p>
-        )}
-      </div>
-    );
+    if (!response || !selectedOption) return null;
+
+    if (selectedOption === "numbers") {
+      return <p>Numbers: {JSON.stringify(response.numbers)}</p>;
+    } else if (selectedOption === "alphabets") {
+      return <p>Alphabets: {JSON.stringify(response.alphabets)}</p>;
+    } else if (selectedOption === "highest_lowercase_alphabet") {
+      return <p>Highest Lowercase Alphabet: {JSON.stringify(response.highest_lowercase_alphabet)}</p>;
+    }
   };
 
   return (
@@ -89,17 +77,15 @@ const App = () => {
           <pre style={styles.pre}>{JSON.stringify(response, null, 2)}</pre>
 
           <h3>Filter the response:</h3>
-          {options.map((option) => (
-            <label key={option.value} style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                value={option.value}
-                onChange={handleMultiSelectChange}
-                style={styles.checkbox}
-              />
-              {option.label}
-            </label>
-          ))}
+          <select value={selectedOption} onChange={handleSelectChange} style={styles.select}>
+            <option value="">Select an option</option>
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+
           {renderFilteredResponse()}
         </div>
       )}
@@ -160,12 +146,13 @@ const styles = {
     borderRadius: '4px',
     overflowX: 'auto',
   },
-  checkboxLabel: {
-    display: 'block',
-    margin: '10px 0',
-  },
-  checkbox: {
-    marginRight: '8px',
+  select: {
+    width: '100%',
+    padding: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+    marginTop: '10px',
+    fontSize: '16px',
   },
 };
 
