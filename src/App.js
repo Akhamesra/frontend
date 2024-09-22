@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 
 const App = () => {
   const [inputJson, setInputJson] = useState('');
@@ -36,9 +37,8 @@ const App = () => {
     }
   };
 
-  const handleMultiSelectChange = (event) => {
-    const selectedValues = Array.from(event.target.selectedOptions, option => option.value);
-    setSelectedOptions(selectedValues);
+  const handleMultiSelectChange = (selectedOptions) => {
+    setSelectedOptions(selectedOptions.map(option => option.value));
   };
 
   const renderFilteredResponse = () => {
@@ -85,18 +85,13 @@ const App = () => {
           <pre style={styles.pre}>{JSON.stringify(response, null, 2)}</pre>
 
           <h3>Filter the response:</h3>
-          <select
-            multiple={true}
-            value={selectedOptions}
+          <Select
+            isMulti
+            options={options}
             onChange={handleMultiSelectChange}
-            style={styles.select}
-          >
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            placeholder="Select filters..."
+            styles={styles.select}
+          />
 
           {renderFilteredResponse()}
         </div>
@@ -159,10 +154,6 @@ const styles = {
     overflowX: 'auto',
   },
   select: {
-    width: '100%',
-    padding: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
     marginTop: '10px',
     fontSize: '16px',
   },
